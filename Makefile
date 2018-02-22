@@ -4,12 +4,12 @@ NAME = goinspect
 #VERSION?=$(shell git describe --tags --always)
 VERSION?=latest
 
-all: docker
+all: clean build
 
 .PHONY: docker run
 default: build
 
-docker: 
+build: 
 	docker build -t $(NAME):$(VERSION) .
 
 run: 
