@@ -11,18 +11,21 @@ import (
 	"strings"
 )
 
-type meta struct {
-	Hostname string `json:"hostname"`
-	IP       string `json:"ip",omitempty`
-	ExtIP    string `json:"extip",omitempty`
-}
+const (
+	version     = "0.1.1"
+	ifconfigUrl = "http://ifconfig.co/ip"
+)
 
 var (
 	conMeta meta
 	counter int
 )
 
-const ifconfigUrl = "http://ifconfig.co/ip"
+type meta struct {
+	Hostname string `json:"hostname"`
+	IP       string `json:"ip",omitempty`
+	ExtIP    string `json:"extip",omitempty`
+}
 
 func (m *meta) newMeta() {
 	m.Hostname, _ = os.Hostname()
@@ -58,9 +61,11 @@ func (m *meta) getIp() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	counter += 1
-	fmt.Fprintf(w, "%-15s %.10s\n", "Hostname:", conMeta.Hostname)
-	fmt.Fprintf(w, "%-15s %.10s\n", "IP:", conMeta.IP)
-	fmt.Fprintf(w, "%-15s %10d\n", "Request count:", counter)
+	fmt.Fprintf(w, "%-15s %s\n", "Hostname:", conMeta.Hostname)
+	fmt.Fprintf(w, "%-15s %s\n", "IP:", conMeta.IP)
+	fmt.Fprintf(w, "%-15s %s\n", "External IP:", conMeta.ExtIP)
+	fmt.Fprintf(w, "%-15s %d\n", "Request count:", counter)
+	fmt.Fprintf(w, "%-15s %s\n", "Version:", version)
 }
 
 func (m *meta) getExtIp() (string, error) {
