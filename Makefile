@@ -1,16 +1,19 @@
 SHELL := /bin/bash
-NAME = goinspect
+NAME = k8s-inspect
 
 #VERSION?=$(shell git describe --tags --always)
 VERSION?=latest
 
 all: clean build
 
-.PHONY: docker run
+.PHONY: build tinybuild run clean
 default: build
 
 build: 
 	docker build -t $(NAME):$(VERSION) .
+
+tinybuild: 
+	docker build -f Dockerfile.multistage -t $(NAME):$(VERSION) .
 
 run: 
 	docker run -p 8080:8080 --name=$(NAME) -d $(NAME):$(VERSION)

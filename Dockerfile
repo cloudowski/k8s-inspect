@@ -1,11 +1,9 @@
-# build stage
-FROM golang:alpine AS build-env
-ADD . /src
-RUN cd /src && go build -o goapp
-
-# final stage
-FROM alpine
-WORKDIR /app
-COPY --from=build-env /src/goapp /app/
+FROM golang:alpine 
+COPY . /src
+RUN cd /src &&\
+    go build -o goapp
+RUN mkdir /app &&\
+    cp /src/goapp /app
 EXPOSE 8080
-ENTRYPOINT ./goapp
+USER 1000
+ENTRYPOINT /app/goapp
